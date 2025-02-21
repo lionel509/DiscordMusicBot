@@ -18,59 +18,67 @@ This bot integrates music playback (via Spotify and FFMPEG) with AI-powered conv
 - **Grok-like personality:** The AI is direct, irreverent, humorous, and sarcastic.
 - **Self-censorship:** Swear words are replaced with asterisks.
 - **Meme context:** Change the AI’s personality with the `!setcontext` command.
-- **System Prompt Example:**
-
 
 ## Setup Instructions
 
 1. **Clone the repository:**
- ```bash
- git clone https://github.com/yourusername/discord_music_bot.git
- cd discord_music_bot
+```bash
+git clone https://github.com/yourusername/discord_music_bot.git
+cd discord_music_bot
+```
 
-Create a virtual environment and install dependencies:
+2. **Create a virtual environment and install dependencies:**
+```bash
 python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows
+# For Linux/macOS:
+source venv/bin/activate 
+# For Windows:
+venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-Configure Environment Variables:
+3. **Configure Environment Variables:**
 
-Copy .env.example to .env and fill in your credentials 
+Copy .env.example to .env and fill in your credentials:
+```bash
 cp .env.example .env
+```
 
-Set Up Ollama & Qwen:0.5b Model:
+4. **Set Up Ollama & Qwen:0.5b Model:**
 
 Follow Ollama’s documentation to download and host the Qwen:0.5b model.
 Ensure the OLLAMA_API_URL in your .env file points to your Ollama endpoint.
 
-Run the Bot:
-
-bash
+5. **Run the Bot:**
+```bash
 python main.py
+```
 
+6. **Docker Setup:**
 
-Docker Setup:
-
-Build the Docker image:
-bash
-
+- Build the Docker image:
+```bash
 docker build -t discord-music-ai-bot .
-Run the container:
-bash
-
+```
+- Run the container:
+```bash
 docker run -d --env-file .env discord-music-ai-bot
+```
 
-Changing the AI Meme Context
+7. **Changing the AI Meme Context**
+
 Use the command !setcontext <new context prompt> in Discord.
 This will update the AI’s personality prompt on the fly.
-Handling Rate Limits and Conversation History
-Rate Limits: The code uses basic error handling. For production use, consider adding retries and back-off strategies.
-Conversation Memory: The AI stores the last few messages (default 10). Adjust the AI_MEMORY_LIMIT in the .env file to suit your needs.
-Additional Music Bot Features to Consider
-Lyrics lookup.
-Playlist management.
-User-specific queues.
-Music recommendations.
-Integration with other music APIs.
-Customizable command prefixes.
+
+8. **Handling Rate Limits and Conversation History**
+
+- Rate Limits: The code uses basic error handling. For production use, consider adding retries and back-off strategies.
+- Conversation Memory: The AI stores the last few messages (default 10). Adjust the AI_MEMORY_LIMIT in the .env file to suit your needs.
+
+9. **Additional Music Bot Features to Consider**
+- Lyrics lookup.
+- Playlist management.
+- User-specific queues.
+- Music recommendations.
+- Integration with other music APIs.
+- Customizable command prefixes.
