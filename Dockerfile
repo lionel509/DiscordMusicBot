@@ -1,18 +1,17 @@
-# Dockerfile
+# Use a slim Python image
 FROM python:3.9-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy requirements and install them
+# Install FFmpeg for audio handling
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the bot source code
+# Copy the entire project into the container
 COPY . .
 
-# Expose any ports if needed (e.g., if Ollama API is hosted in the container)
-# EXPOSE 11434
-
-# Start the bot
+# Command to run the bot
 CMD ["python", "main.py"]
