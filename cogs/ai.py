@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 # Maximum conversation history entries (excluding the system prompt)
 MAX_HISTORY = 10
 
-# Some example emojis to sprinkle into responses
-EMOJI_POOL = ["😊", "😎", "😉", "👍", "🔥", "🤖", "💬"]
+# Example emoji pool (you can remove or adjust these if desired)
+EMOJI_POOL = ["😊", "😎", "😉", "👍", "🔥", "🤬", "💥"]
 
 def add_emoji(text: str) -> str:
     """Randomly append an emoji from the pool to a text string."""
@@ -22,28 +22,28 @@ def add_emoji(text: str) -> str:
     return text
 
 class AI(commands.Cog):
-    """AI conversation commands using the Ollama API in a companion style."""
+    """AI conversation commands using the Ollama API (e.g. llama2-7b-chat) in a raw, unhinged New Yorker style."""
     def __init__(self, bot):
         self.bot = bot
-        # Read the model from environment variable (default to qwen:0.5b if not set)
+        # Read the model from environment variable; default is "qwen:0.5b" if not set.
         self.model = os.getenv("MODEL", "qwen:0.5b")
-        # Updated system prompt to encourage natural, expressive responses.
+        # Updated system prompt: instruct the AI to be unfiltered, profane, and unhinged—like a true New Yorker.
         self.conversation_history = [{
             "role": "system",
             "content": (
-                "You are Grok, a friendly, witty, and engaging AI companion. "
-                "Speak naturally as if you were a person—use personal pronouns, humor, and even emojis when it feels right. "
-                "Feel free to share opinions or additional context in a spontaneous, conversational tone. "
-                "Never respond with 'I have nothing to say.'"
+                "You are Grok, a no-nonsense, foul-mouthed New Yorker who doesn't hold back. "
+                "You curse like a sailor in every other sentence, and you're brutally honest, edgy, and unfiltered. "
+                "Your tone is raw and unapologetic—mix profanity with humor, and never be polite. "
+                "Feel free to drop curse words liberally and speak like a real, unhinged New Yorker."
             )
         }]
         self.meme_context = "default"
-        logger.info("AI cog initialized with expressive system prompt and default meme context using model: %s", self.model)
+        logger.info("AI cog initialized with unhinged system prompt using model: %s", self.model)
         asyncio.create_task(self.test_ollama())
 
     async def test_ollama(self):
         """Run a test prompt on initialization to ensure the Ollama API is working."""
-        test_prompt = "Hello, how's your day?"
+        test_prompt = "Hey, how's your damn day been?"
         logger.info("Running test prompt on Ollama API: %s", test_prompt)
         try:
             response = await asyncio.to_thread(
@@ -80,8 +80,7 @@ class AI(commands.Cog):
             logger.info("Received response from Ollama API: %s", message)
             if not message or message.lower() == "i have nothing to say.":
                 logger.warning("Received empty or default response from Ollama API.")
-                return "Sorry, I'm not sure how to respond to that."
-            # Add a random emoji to add personality.
+                return "Fuck, I’m drawing a blank here."
             return add_emoji(message)
         except Exception as e:
             logger.exception("Exception while querying Ollama API: %s", e)
@@ -90,13 +89,14 @@ class AI(commands.Cog):
     @commands.command(name="chat", aliases=["ai"])
     async def chat(self, ctx, *, message: str):
         """
-        Engage in conversation with the AI.
+        Engage in a conversation with the AI.
         Usage (by mentioning the bot): @BotName chat <message>
         """
         logger.info("Chat command invoked by %s with message: %s", ctx.author, message)
         self.update_history("user", message)
         logger.debug("Current conversation history: %s", self.conversation_history)
         response_message = await self.query_ollama()
+        # Optionally, bypass censor_text here if you want raw profanity.
         response_message = censor_text(response_message)
         self.update_history("assistant", response_message)
         await ctx.send(response_message)
@@ -110,9 +110,9 @@ class AI(commands.Cog):
         """
         self.meme_context = context
         new_system_prompt = (
-            f"You are Grok, a friendly, witty, and engaging AI companion. Meme context: {self.meme_context}. "
-            "Speak naturally with humor, personal insights, and occasional emojis. "
-            "Never respond with 'I have nothing to say.'"
+            f"You are Grok, a no-nonsense, foul-mouthed New Yorker. Meme context: {self.meme_context}. "
+            "You curse like a sailor and speak like a real, unhinged New Yorker. "
+            "Your responses are raw, edgy, and unapologetic—drop profanity liberally and don't give a damn about being polite."
         )
         self.conversation_history[0]["content"] = new_system_prompt
         await ctx.send(f"Meme context updated to: {context}")
