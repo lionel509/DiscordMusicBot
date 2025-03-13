@@ -29,7 +29,7 @@ intents.message_content = True  # Required to read message content
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 # List of extensions to load.
-extensions = ['cogs.music', 'cogs.ai']
+extensions = ['cogs.ai', 'cogs.help'] # ['cogs.music', 'cogs.ai', 'cogs.help']
 
 async def load_extensions():
     for ext in extensions:
